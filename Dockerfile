@@ -12,5 +12,7 @@ RUN pip3 install -r requirements.txt
 COPY . .
 ENV FLASK_APP=main.py
 
+EXPOSE 80
+
 # run the flask server
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
