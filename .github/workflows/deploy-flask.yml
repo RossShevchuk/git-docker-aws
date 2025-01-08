@@ -47,13 +47,6 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-        
-    #aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 430118857028.dkr.ecr.eu-west-1.amazonaws.com
-    #docker pull 430118857028.dkr.ecr.eu-west-1.amazonaws.com/coffee-wifi:latest
-    #docker stop coffee-wifi || true
-    #docker rm coffee-wifi || true
-    #docker run -d --name coffee-wifi -p 80:80 430118857028.dkr.ecr.eu-west-1.amazonaws.com/coffee-wifi:latest
-
           aws ecr get-login-password --region eu-west-1 | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
           sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           if sudo docker ps -a --format '{{.Names}}' | grep -w "$CONTAINER_NAME" > /dev/null; then
