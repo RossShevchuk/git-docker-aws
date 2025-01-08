@@ -1,17 +1,19 @@
-name: Deploy to ECR
+name: Deploy to EC2
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build:
-    name: Build Image
+  deploy:
     runs-on: ubuntu-latest
+    
     steps:
+    #Step 1: Checkout the code
     - name: Check out code
       uses: actions/checkout@v2
     
+    #Step 2: Log in to AWS CLI
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -19,6 +21,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.SSH_KEY }}
         aws-region: eu-west-1
 
+    #Step 3: Login to Amazon ECR
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
@@ -31,3 +34,9 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+    #Step 4: Deploy to EC2 instance
+    # - name: Deploy to EC2 via SSH
+    #   uses: appleboy/ssh-action@v0.1.8
+    #   with:
+    #     host: ${{ secrets.HOST_DNS }}
