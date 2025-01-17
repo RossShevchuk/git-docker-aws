@@ -32,7 +32,7 @@ jobs:
 
     - name: Build, tag, and push image to Amazon ECR
       env:
-        ECR_REGISTRY: 430118857028.dkr.ecr.eu-west-1.amazonaws.com
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: coffee-wifi
         IMAGE_TAG: latest
       run: |
@@ -47,7 +47,7 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          aws ecr get-login-password --region eu-west-1 | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
+          aws ecr get-login-password --region eu-west-1 | sudo docker login --username AWS --password-stdin aws ecr get-login-password --region eu-west-1 | sudo docker login --username AWS --password-stdin 430118857028.dkr.ecr.eu-west-1.amazonaws.com
           sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           if sudo docker ps -a --format '{{.Names}}' | grep -w "$CONTAINER_NAME" > /dev/null; then
               echo "Container '$CONTAINER_NAME' exists. Stopping..."
