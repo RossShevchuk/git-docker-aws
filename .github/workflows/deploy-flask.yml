@@ -41,7 +41,7 @@ jobs:
 
     - name: Debug secrets and environment
       run: |
-        echo "ECR_REGISTRY: ${$ECR_REGISTRY:+'[set]'}"
+        echo "ECR_REGISTRY: ${ECR_REGISTRY:+'[set]'}"
         echo "ECR_REPOSITORY: ${ECR_REPOSITORY:+'[set]'}"
         echo "IMAGE_TAG: ${IMAGE_TAG:+'[set]'}"
         echo "EC2_HOST: ${EC2_HOST:+'[set]'}"
