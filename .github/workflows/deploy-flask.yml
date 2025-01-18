@@ -52,7 +52,7 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
-        envs: ECR_REGISTRY
+        envs: AWS_REGION,CONTAINER_NAME,ECR_REGISTRY,ECR_REPOSITORY,IMAGE_TAG
         script: |
           set -x  # Enable command tracing
           echo "Pulling Docker image from ECR..."
