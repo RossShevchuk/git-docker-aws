@@ -52,11 +52,17 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
+        REGION: $AWS_REGION
+        CONTAINER: $CONTAINER_NAME
+        REGISTRY: $ECR_REGISTRY
+        REPOSITORY: $ECR_REPOSITORY
+        TAG: $IMAGE_TAG
+        envs: REGION, CONTAINER,REGISTRY,REPOSITORY,TAG
         script: |
           set -x  # Enable command tracing
           echo "Pulling Docker image from ECR..."
-          echo "ECR_REGISTRY: $ECR_REGISTRY"
-          aws ecr get-login-password --region eu-west-1 | sudo docker login --username AWS --password-stdin 430118857028.dkr.ecr.eu-west-1.amazonaws.com
+          echo "REGISTRY: $REGISTRY"
+          aws ecr get-login-password --region $REGION | sudo docker login --username AWS --password-stdin $REGISTRY
           if [ $? -ne 0 ]; then
             echo "Docker login failed!"
             exit 1
@@ -64,17 +70,17 @@ jobs:
             echo "Docker login successful."
 
           echo "Pulling Docker image..."
-          sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          sudo docker pull $REGISTRY/$REPOSITORY:$TAG
           if [ $? -ne 0 ]; then
             echo "Failed to pull Docker image!"
             exit 1
           fi
             echo "Docker image pulled successfully."
-          if sudo docker ps -a --format '{{.Names}}' | grep -w "$CONTAINER_NAME" > /dev/null; then
+          if sudo docker ps -a --format '{{.Names}}' | grep -w "$CONTAINER" > /dev/null; then
               echo "Container '$CONTAINER_NAME' exists. Stopping..."
               sudo docker stop "$CONTAINER_NAME"
               sudo docker rm "$CONTAINER_NAME"
           else
               echo "Container does not exist. No action taken."
           fi
-          sudo docker run -d --name $CONTAINER_NAME -p 8080:8080 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          sudo docker run -d --name $CONTAINER -p 8080:8080 $REGISTRY/$REPOSITORY:$TAG
