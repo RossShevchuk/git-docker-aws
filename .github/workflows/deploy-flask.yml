@@ -45,23 +45,3 @@ jobs:
         echo "ECR_REPOSITORY: ${ECR_REPOSITORY:+'[set]'}"
         echo "IMAGE_TAG: ${IMAGE_TAG:+'[set]'}"
         echo "EC2_HOST: ${EC2_HOST:+'[set]'}"
-
-
-    #Step 4: Deploy to EC2 instance
-    - name: Deploy to EC2 via SSH
-      uses: appleboy/ssh-action@v1.1.0
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          aws ecr get-login-password --region eu-west-1 | sudo docker login --username AWS --password-stdin 430118857028.dkr.ecr.eu-west-1.amazonaws.com
-          sudo docker pull 430118857028.dkr.ecr.eu-west-1.amazonaws.com/coffee-wifi:latest
-          if sudo docker ps -a --format '{{.Names}}' | grep -w "$CONTAINER_NAME" > /dev/null; then
-              echo "Container '$CONTAINER_NAME' exists. Stopping..."
-              sudo docker stop "$CONTAINER_NAME"
-              sudo docker rm "$CONTAINER_NAME"
-          else
-              echo "Container does not exist. No action taken."
-          fi
-          sudo docker run -d --name $CONTAINER_NAME -p 80:80 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
