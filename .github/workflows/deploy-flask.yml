@@ -54,9 +54,7 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         envs: AWS_REGION,CONTAINER_NAME,ECR_REGISTRY,ECR_REPOSITORY,IMAGE_TAG
         script: |
-          set -x  # Enable command tracing
           echo "Pulling Docker image from ECR..."
-          echo "ECR_REGISTRY: $ECR_REGISTRY"
           aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
           if [ $? -ne 0 ]; then
             echo "Docker login failed!"
