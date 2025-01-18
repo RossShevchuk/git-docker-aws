@@ -52,11 +52,16 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
-        envs: $ECR_REGISTRY
+        AWS_REGION: eu-west-1
+        CONTAINER_NAME: coffee-wifi
+        ECR_REGISTRY: 430118857028.dkr.ecr.eu-west-1.amazonaws.com
+        ECR_REPOSITORY: coffee-wifi
+        IMAGE_TAG: latest
+        envs: ECR_REGISTRY
         script: |
           set -x  # Enable command tracing
           echo "Pulling Docker image from ECR..."
-          echo "ECR_REGISTRY: $ECR_REGISTRY"
+          echo "ECR_REGISTRY: ${{ECR_REGISTRY}}"
           aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
           if [ $? -ne 0 ]; then
             echo "Docker login failed!"
