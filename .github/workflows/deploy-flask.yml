@@ -39,9 +39,10 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-    - name: Debug secrets and environment
+    - name: Debugging Environment
       run: |
+        echo "AWS_REGION: $AWS_REGION"
         echo "ECR_REGISTRY: $ECR_REGISTRY"
-        echo "ECR_REPOSITORY: ${ECR_REPOSITORY:+'[set]'}"
-        echo "IMAGE_TAG: ${IMAGE_TAG:+'[set]'}"
-        echo "EC2_HOST: ${EC2_HOST:+'[set]'}"
+        echo "ECR_REPOSITORY: $ECR_REPOSITORY"
+        echo "IMAGE_TAG: $IMAGE_TAG"
+        echo "CONTAINER_NAME: $CONTAINER_NAME"
