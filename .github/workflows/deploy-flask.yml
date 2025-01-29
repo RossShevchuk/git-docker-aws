@@ -77,3 +77,4 @@ jobs:
               echo "Container does not exist. No action taken."
           fi
           sudo docker run -d --name $CONTAINER_NAME -p 80:80 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          
