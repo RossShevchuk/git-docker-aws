@@ -76,4 +76,4 @@ jobs:
           else
               echo "Container does not exist. No action taken."
           fi
-          sudo docker run -d --name $CONTAINER_NAME -p 8080:8080 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          sudo docker run -d --name $CONTAINER_NAME -p 5000:5000 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
