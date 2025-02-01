@@ -5,4 +5,4 @@ services:
     container_name: coffee-wifi-aws-cntainer
     image: coffee-wifi-aws-container
     ports:
-      - "5000:5000"
+      - "8080:8080"
